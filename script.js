@@ -1,41 +1,33 @@
 let body = document.body;
 let loader = document.getElementById("loader");
 let url = 'https://api.github.com/users/NataliiaChuienko';
-let log = console.log ;
 let today = new Date();
+
+setTimeout(() => (loader.style.display = "none"), 3000);
 
 let getData = new Promise((resolve,reject) => {	
 	setTimeout(() => 
 	(today ? resolve(today) : reject('Дата не найдена')	),
-    4000) 
-  
-}) 
+    3000)  
+})
+
 let getUrl = new Promise((resolve,reject) => {
     setTimeout(() =>
         (url ? resolve(url) : reject('Ссылка не найдена') ),
         2000)
 }) 
 
- 
-
-
 Promise.all([getData, getUrl])
-.then(([today, url]) => fetch(`${url}${today}`))
+.then(([today, url]) => fetch(url))
     .then(res => res.json())
-    .then(json => log(json.avatar_url))
-    .then(json => log(json.name))
-    .then(json =>  log(json.bio))
     .then((json) => {
-    setTimeout(() => (loader.style.display = "none"), 4000);
-   
-
         let img = document.createElement('img');
         if (json.avatar_url != null) {
         img.src = json.avatar_url;
         } else {
         img.src = 'Информация о пользователе недоступна'
          }
-        body.append(img);
+        body.appendChild(img);
 
         let name = document.createElement('p');
         if (json.name != null) {
@@ -43,7 +35,7 @@ Promise.all([getData, getUrl])
         } else {
             name.innerHTML = 'Информация о пользователе недоступна';
         }
-        body.append(name);
+        body.appendChild(name);
 
         let bio = document.createElement('p');
         if (json.bio != null) {
@@ -51,15 +43,11 @@ Promise.all([getData, getUrl])
         } else {
             bio.innerHTML = 'Информация о пользователе недоступна';
         }
-        body.append(bio);
+        body.appendChild(bio);
 
+    let date = document.createElement('div');
+        date.id = 'today';
+       date.innerHTML = today;
+    document.body.appendChild(date);
     })
     .catch(err => console.log(err));
-
-
-
-// let getName = new Promise((resolve,reject) => {
-//     setTimeout(() =>
-//         (name ? resolve(name) : reject('Имя не найдена') ),
-//         3000)
-// })
