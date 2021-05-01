@@ -1,13 +1,32 @@
 let body = document.body;
+let loader = document.getElementById("loader");
 let url = 'https://api.github.com/users/NataliiaChuienko';
+let log = console.log ;
+let today = new Date();
+
+let getData = new Promise((resolve,reject) => {	
+	setTimeout(() => 
+	(today ? resolve(today) : reject('Дата не найдена')	),
+    4000) 
+  
+}) 
+let getUrl = new Promise((resolve,reject) => {
+    setTimeout(() =>
+        (url ? resolve(url) : reject('Ссылка не найдена') ),
+        2000)
+}) 
+
+ 
 
 
-fetch(url)
+Promise.all([getData, getUrl])
+.then(([today, url]) => fetch(`${url}${today}`))
     .then(res => res.json())
-    .then(json => {
-        console.log(json.avatar_url);
-        console.log(json.name);
-        console.log(json.bio);
+    .then(json => log(json.avatar_url))
+    .then(json => log(json.name))
+    .then(json =>  log(json.bio))
+    .then((json) => {
+    setTimeout(() => (loader.style.display = "none"), 4000);
    
 
         let img = document.createElement('img');
@@ -39,3 +58,8 @@ fetch(url)
 
 
 
+// let getName = new Promise((resolve,reject) => {
+//     setTimeout(() =>
+//         (name ? resolve(name) : reject('Имя не найдена') ),
+//         3000)
+// })
